@@ -1,0 +1,312 @@
+# Azure CLI – Virtual Machine Creation
+
+This guide explains how to create and verify an Azure Virtual Machine using the **Azure CLI** without using the Azure Portal.
+
+## VM Requirements
+
+| Configuration | Value |
+|---|---|
+| VM Name | `datacenter-vm` |
+| OS Image | `Ubuntu2204` |
+| VM Size | `Standard_B2s` |
+| Admin Username | `azureuser` |
+| Authentication | SSH Key |
+| Storage SKU | `Standard_LRS` |
+| OS Disk Size | `30 GB` |
+| Location | `eastus` |
+
+---
+
+# 1. Connect to the Azure Client
+
+Connect to the Azure client/landing host provided by the lab.
+
+```bash
+ssh azure-client
+```
+
+Verify that Azure CLI is installed:
+
+```bash
+az version
+```
+
+---
+
+# 2. Authenticate with Azure
+
+Login to Azure:
+
+```bash
+az login
+```
+
+Verify the currently authenticated Azure account:
+
+```bash
+az account show
+```
+
+For a cleaner output:
+
+```bash
+az account show -o table
+```
+
+---
+
+# 3. Find the Azure Subscription and Resource Group
+
+List available subscriptions:
+
+```bash
+az account list -o table
+```
+
+Set the required subscription:
+
+```bash
+az account set --subscription "<SUBSCRIPTION_ID>"
+```
+
+Verify the selected subscription:
+
+```bash
+az account show -o table
+```
+
+---
+
+## Find the Resource Group
+
+List available resource groups:
+
+```bash
+az group list -o table
+```
+
+Example:
+
+```text
+Name                          Location    Status
+----------------------------  ----------  ---------
+kml_rg_main-470f5349e4104b89  eastus      Succeeded
+```
+
+Set the resource group as an environment variable:
+
+```bash
+RESOURCE_GROUP="kml_rg_main-470f5349e4104b89"
+```
+
+Verify:
+
+```bash
+echo $RESOURCE_GROUP
+```
+
+---
+
+# 4. Check Available Azure Locations
+
+List available Azure regions:
+
+```bash
+az account list-locations -o table
+```
+
+For this lab, the resource group is located in:
+
+```text
+eastus
+```
+
+---
+
+# 5. Create the Azure Virtual Machine
+
+Create the VM using Azure CLI:
+
+```bash
+az vm create \
+  --resource-group "$RESOURCE_GROUP" \
+  --name datacenter-vm \
+  --image Ubuntu2204 \
+  --size Standard_B2s \
+  --admin-username azureuser \
+  --generate-ssh-keys \
+  --storage-sku Standard_LRS \
+  --os-disk-size-gb 30
+```
+
+## Command Explanation
+
+| Option | Purpose |
+|---|---|
+| `--resource-group` | Specifies the Azure resource group |
+| `--name` | Sets the VM name |
+| `--image` | Specifies Ubuntu 22.04 |
+| `--size` | Sets the VM size to `Standard_B2s` |
+| `--admin-username` | Creates the `azureuser` administrator |
+| `--generate-ssh-keys` | Generates SSH keys automatically |
+| `--storage-sku` | Uses `Standard_LRS` storage |
+| `--os-disk-size-gb` | Sets the OS disk to 30 GB |
+
+---
+
+# 6. SSH Key Generation
+
+The following option automatically generates SSH keys if they do not already exist:
+
+```bash
+--generate-ssh-keys
+```
+
+The keys are normally stored at:
+
+```text
+~/.ssh/id_rsa
+~/.ssh/id_rsa.pub
+```
+
+Check the keys:
+
+```bash
+ls -la ~/.ssh/
+```
+
+---
+
+# 7. Verify the VM
+
+Check the VM details:
+
+```bash
+az vm show \
+  --resource-group "$RESOURCE_GROUP" \
+  --name datacenter-vm \
+  -o table
+```
+
+---
+
+# 8. Verify VM Running State
+
+Check the current power state:
+
+```bash
+az vm get-instance-view \
+  --resource-group "$RESOURCE_GROUP" \
+  --name datacenter-vm \
+  --query "instanceView.statuses[?starts_with(code, 'PowerState/')].displayStatus" \
+  -o tsv
+```
+
+Expected output:
+
+```text
+VM running
+```
+
+---
+
+# 9. Final Verification
+
+Verify all required VM configuration in one command:
+
+```bash
+az vm show \
+  --resource-group "$RESOURCE_GROUP" \
+  --name datacenter-vm \
+  --show-details \
+  --query "{Name:name,Size:hardwareProfile.vmSize,OS:storageProfile.imageReference.offer,Disk:storageProfile.osDisk.diskSizeGb,Storage:storageProfile.osDisk.managedDisk.storageAccountType,State:powerState}" \
+  -o table
+```
+
+Expected output:
+
+```text
+Name           Size          OS            Disk    Storage       State
+-------------  ------------  ------------  ------  ------------  -----------
+datacenter-vm  Standard_B2s  UbuntuServer  30      Standard_LRS  VM running
+```
+
+---
+
+# 10. Verification Checklist
+
+Before considering the task complete, verify:
+
+- [x] Azure CLI installed
+- [x] Azure authentication successful
+- [x] Correct subscription selected
+- [x] Correct resource group selected
+- [x] VM name is `datacenter-vm`
+- [x] Ubuntu 22.04 image used
+- [x] VM size is `Standard_B2s`
+- [x] Admin username is `azureuser`
+- [x] SSH keys generated
+- [x] Storage SKU is `Standard_LRS`
+- [x] OS disk size is `30 GB`
+- [x] VM state is `VM running`
+
+---
+
+# Complete Command Sequence
+
+For quick execution, the complete workflow is:
+
+```bash
+# Verify Azure CLI
+az version
+
+# Login
+az login
+
+# Verify account
+az account show -o table
+
+# Set subscription
+az account set --subscription "<SUBSCRIPTION_ID>"
+
+# Find resource groups
+az group list -o table
+
+# Set resource group
+RESOURCE_GROUP="kml_rg_main-470f5349e4104b89"
+
+# Create VM
+az vm create \
+  --resource-group "$RESOURCE_GROUP" \
+  --name datacenter-vm \
+  --image Ubuntu2204 \
+  --size Standard_B2s \
+  --admin-username azureuser \
+  --generate-ssh-keys \
+  --storage-sku Standard_LRS \
+  --os-disk-size-gb 30
+
+# Verify VM
+az vm show \
+  --resource-group "$RESOURCE_GROUP" \
+  --name datacenter-vm \
+  --show-details \
+  --query "{Name:name,Size:hardwareProfile.vmSize,OS:storageProfile.imageReference.offer,Disk:storageProfile.osDisk.diskSizeGb,Storage:storageProfile.osDisk.managedDisk.storageAccountType,State:powerState}" \
+  -o table
+```
+
+## Result
+
+The final Azure VM should have:
+
+```text
+VM Name       : datacenter-vm
+OS            : Ubuntu 22.04
+VM Size       : Standard_B2s
+Username      : azureuser
+Authentication: SSH Key
+Disk          : 30 GB
+Storage       : Standard_LRS
+State         : VM running
+Region        : eastus
+```
