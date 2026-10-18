@@ -1,15 +1,32 @@
-import subprocess
-import json
+#!/usr/bin/env python3
+
+"""
+Terraform Drift Detection
+
+Runs `terraform plan -detailed-exitcode` against the working directory,
+writes a drift report when changes are detected, and optionally sends a
+Slack notification.
+
+Exit codes:
+  0 = No drift
+  2 = Drift detected
+  1 = Error
+"""
+
 import os
+import subprocess
 from datetime import datetime
+
+import requests
 
 WORKING_DIRECTORY = "./terraform"
 
 REPORT_FILE = "terraform-drift-report.txt"
 
+WEBHOOK = os.environ.get("SLACK_WEBHOOK_URL", "https://hooks.slack.com/services/XXXX")
+
 
 def run_command(command):
-
     result = subprocess.run(
         command,
         cwd=WORKING_DIRECTORY,
@@ -64,21 +81,17 @@ elif plan.returncode == 2:
 
     print(f"Report saved to {REPORT_FILE}")
 
+    ## Slack Notification Integration
+
+    message = {
+        "text": "Terraform Drift Detected.\nReview terraform-drift-report.txt before deployment."
+    }
+
+    requests.post(WEBHOOK, json=message)
+
 else:
 
     print("Terraform Error")
     print(plan.stderr)
 
     exit(1)
-
-## Slack Notification Integration
-
-import requests
-
-WEBHOOK = "https://hooks.slack.com/services/XXXX"
-
-message = {
-    "text": "Terraform Drift Detected.\nReview terraform-drift-report.txt before deployment."
-}
-
-requests.post(WEBHOOK, json=message)

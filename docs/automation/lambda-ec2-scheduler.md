@@ -62,10 +62,10 @@ cron(30 14 * * ? *)
 
 ## Lambda Environment Variables
 
-  Variable       Example
-  -------------- -----------------------------------------
-  INSTANCE_IDS   i-0123456789abcdef0,i-0abcdef1234567890
-  ACTION         start or stop
+| Variable | Example |
+|---|---|
+| INSTANCE_IDS | `i-0123456789abcdef0,i-0abcdef1234567890` |
+| ACTION | `start` or `stop` |
 
 ## Required IAM Permissions
 

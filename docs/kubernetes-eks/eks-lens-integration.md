@@ -213,23 +213,13 @@ kubectl config view
 
 # Common Errors
 
-  ------------------------------------------------------------------------
-  Error                  Cause               Solution
-  ---------------------- ------------------- -----------------------------
-  Unauthorized           IAM identity not    Grant EKS access
-                         authorized          
-
-  Connection refused     Network or endpoint Verify VPC connectivity
-                         issue               
-
-  No cluster found       Wrong cluster name  Run `aws eks list-clusters`
-
-  Context not found      Missing kubeconfig  Run
-                                             `aws eks update-kubeconfig`
-
-  Expired token          Temporary           Re-authenticate to AWS
-                         credentials expired 
-  ------------------------------------------------------------------------
+| Error | Cause | Solution |
+|---|---|---|
+| Unauthorized | IAM identity not authorized | Grant EKS access |
+| Connection refused | Network or endpoint issue | Verify VPC connectivity |
+| No cluster found | Wrong cluster name | Run `aws eks list-clusters` |
+| Context not found | Missing kubeconfig | Run `aws eks update-kubeconfig` |
+| Expired token | Temporary credentials expired | Re-authenticate to AWS |
 
 ------------------------------------------------------------------------
 

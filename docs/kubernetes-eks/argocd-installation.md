@@ -103,8 +103,12 @@ kubectl logs <pod-name> -n argocd
 kubectl get svc -n argocd
 ```
 
-Verify: - AWS Load Balancer Controller (if required) - Public subnets
-tagged for ELB - Security groups - IAM permissions
+Verify:
+
+- AWS Load Balancer Controller (if required)
+- Public subnets tagged for ELB
+- Security groups
+- IAM permissions
 
 ## Cannot access the UI
 

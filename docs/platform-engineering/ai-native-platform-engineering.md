@@ -126,7 +126,12 @@ Why Go?
 -   Redis
 -   Amazon S3
 
-Store: - Logs - Reports - SBOM - Artifacts
+Store:
+
+- Logs
+- Reports
+- SBOM
+- Artifacts
 
 ------------------------------------------------------------------------
 
@@ -468,45 +473,25 @@ platform/
 
 # Recommended Tools
 
-  -----------------------------------------------------------------------
-  Layer                                    Tool
-  ---------------------------------------- ------------------------------
-  Frontend                                 Next.js + React
-
-  Backend                                  Go + Gin
-
-  AI                                       Python + FastAPI + LangGraph
-
-  Workflow                                 Temporal
-
-  SCM                                      GitHub App
-
-  Containers                               Docker
-
-  Registry                                 Amazon ECR
-
-  IaC                                      Terraform
-
-  Kubernetes                               Amazon EKS
-
-  GitOps                                   Argo CD
-
-  Security                                 Gitleaks, Semgrep, SonarQube,
-                                           Trivy, Checkov, Syft, Cosign
-
-  Secrets                                  Vault
-
-  Monitoring                               Prometheus, Grafana, Loki,
-                                           Tempo
-
-  Database                                 PostgreSQL
-
-  Cache                                    Redis
-
-  Object Storage                           Amazon S3
-
-  Notifications                            Slack / Teams
-  -----------------------------------------------------------------------
+| Layer | Tool |
+|---|---|
+| Frontend | Next.js + React |
+| Backend | Go + Gin |
+| AI | Python + FastAPI + LangGraph |
+| Workflow | Temporal |
+| SCM | GitHub App |
+| Containers | Docker |
+| Registry | Amazon ECR |
+| IaC | Terraform |
+| Kubernetes | Amazon EKS |
+| GitOps | Argo CD |
+| Security | Gitleaks, Semgrep, SonarQube, Trivy, Checkov, Syft, Cosign |
+| Secrets | Vault |
+| Monitoring | Prometheus, Grafana, Loki, Tempo |
+| Database | PostgreSQL |
+| Cache | Redis |
+| Object Storage | Amazon S3 |
+| Notifications | Slack / Teams |
 
 ------------------------------------------------------------------------
 

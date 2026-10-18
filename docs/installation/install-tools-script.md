@@ -5,16 +5,16 @@
 This repository provides a Bash script to automatically install the
 following tools on an Ubuntu-based EC2 instance:
 
--   AWS CLI v2
--   eksctl
--   kubectl
--   Docker Engine
--   Docker Compose
+- AWS CLI v2
+- eksctl
+- kubectl
+- Docker Engine
+- Docker Compose
 
 The script updates the system, installs dependencies, validates each
 installation, and logs progress to `/tmp/install.log`.
 
-------------------------------------------------------------------------
+---
 
 ## Repository Reference
 
@@ -22,15 +22,17 @@ Replace the placeholder below with your GitHub repository URL.
 
 **Repository:**
 
-``` text
+```text
 https://github.com/<your-username>/<your-repository>
 ```
 
-------------------------------------------------------------------------
+---
 
 ## Installation Script
 
-``` bash
+The full script lives at [`scripts/install-tools.sh`](../../scripts/install-tools.sh).
+
+```bash
 #!/bin/bash
 
 set -euo pipefail
@@ -75,8 +77,8 @@ esac
 PLATFORM="$(uname -s)_${EKSCTL_ARCH}"
 
 curl -sSL \
-"https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_${PLATFORM}.tar.gz" \
--o eksctl.tar.gz
+    "https://github.com/eksctl-io/eksctl/releases/latest/download/eksctl_${PLATFORM}.tar.gz" \
+    -o eksctl.tar.gz
 
 tar -xzf eksctl.tar.gz -C /tmp
 install -m 0755 /tmp/eksctl /usr/local/bin/eksctl
@@ -91,7 +93,7 @@ esac
 KUBECTL_VERSION=$(curl -L -s https://dl.k8s.io/release/stable.txt)
 
 curl -LO \
-"https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/${KUBECTL_ARCH}/kubectl"
+    "https://dl.k8s.io/release/${KUBECTL_VERSION}/bin/linux/${KUBECTL_ARCH}/kubectl"
 
 install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 rm -f kubectl
@@ -100,7 +102,7 @@ kubectl version --client
 install -m 0755 -d /etc/apt/keyrings
 
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg \
--o /etc/apt/keyrings/docker.asc
+    -o /etc/apt/keyrings/docker.asc
 
 chmod a+r /etc/apt/keyrings/docker.asc
 
@@ -116,11 +118,11 @@ EOF
 apt-get update -y
 
 apt-get install -y \
-docker-ce \
-docker-ce-cli \
-containerd.io \
-docker-buildx-plugin \
-docker-compose-plugin
+    docker-ce \
+    docker-ce-cli \
+    containerd.io \
+    docker-buildx-plugin \
+    docker-compose-plugin
 
 systemctl enable docker
 systemctl start docker
@@ -128,17 +130,17 @@ systemctl start docker
 echo "Installation completed successfully."
 ```
 
-------------------------------------------------------------------------
+---
 
 ## Usage
 
-``` bash
-chmod +x install-tools.sh
-sudo ./install-tools.sh
+```bash
+chmod +x scripts/install-tools.sh
+sudo ./scripts/install-tools.sh
 ```
 
 ## Log File
 
-``` text
+```text
 /tmp/install.log
 ```
